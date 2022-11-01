@@ -6,7 +6,7 @@ var logger = require("morgan");
 const compression = require("compression");
 const helmet = require("helmet");
 
-var indexRouter = require("./routes/index");
+const indexRouter = require("./routes/index");
 const catalogRouter = require("./routes/catalog");
 
 var app = express();
@@ -29,7 +29,7 @@ app.set("view engine", "jade");
 
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(compression());
