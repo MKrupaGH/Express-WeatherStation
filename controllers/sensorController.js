@@ -8,8 +8,6 @@ exports.sensor_create_post = (req, res, next) => {
   });
 
   sensor.save((err) => {
-    err ? next(err) : res.redirect("/catalog");
+    err ? next(err) : res.json("Saved");
   });
-
-  res.json("Ok");
 };
