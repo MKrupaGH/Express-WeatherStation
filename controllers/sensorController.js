@@ -1,6 +1,7 @@
 const Sensor = require("../models/sensor");
 
 exports.sensor_create_post = (req, res, next) => {
+  console.log("ok");
   const sensor = new Sensor({
     temp: req.query.temp,
     hum: req.query.hum,
@@ -10,5 +11,5 @@ exports.sensor_create_post = (req, res, next) => {
     err ? next(err) : res.redirect("/catalog");
   });
 
-  res.redirect("/");
+  res.json("Ok");
 };

@@ -42,6 +42,7 @@ app.use("/catalog", catalogRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
+  console.log("error");
   next(createError(404));
 });
 
