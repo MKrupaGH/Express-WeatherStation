@@ -18,6 +18,21 @@ exports.sensor_create_post = (req, res, next) => {
   });
 };
 
-exports.sensor_delete_all = (res, req, next) => {
+exports.sensor_delete_all = (req, res, next) => {
   Sensor.deleteMany({});
+};
+
+exports.get_data = async (req, res) => {
+  try {
+    const collection = await Sensor.find();
+
+    return res.status(200).json({
+      success: true,
+      count: collection.length,
+      data: collection,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "server error" });
+  }
 };
