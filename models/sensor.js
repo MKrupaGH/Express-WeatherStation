@@ -19,8 +19,4 @@ SensorSchema.virtual("url").get(function () {
   return `/catalog`;
 });
 
-SensorSchema.virtual("formated_date").get(function () {
-  return this.createdAt.toLocaleString("en-GB");
-});
-
 module.exports = mongoose.model("Sensor", SensorSchema);
