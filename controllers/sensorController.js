@@ -45,6 +45,20 @@ exports.get_data = async (req, res) => {
   }
 };
 
+exports.get_newest_data = async (req, res) => {
+  try {
+    const collection = await Sensor.find().limit(1).sort({ $natural: -1 });
+
+    return res.status(200).json({
+      success: true,
+      data: collection,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "server error" });
+  }
+};
+
 exports.sorted_data = async (req, res) => {
   try {
     const collection = await Sensor.aggregate([
@@ -53,12 +67,12 @@ exports.sorted_data = async (req, res) => {
           $and: [
             {
               createdAt: {
-                $gte: new Date("2020-11-12T00:00:00.000Z"),
+                $gte: new Date(new Date().getTime() - 60 * 60 * 24 * 1000),
               },
             },
             {
               createdAt: {
-                $lte: new Date("2023-11-12T00:00:00.000Z"),
+                $lte: new Date(),
               },
             },
           ],
