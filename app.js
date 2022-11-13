@@ -5,6 +5,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const compression = require("compression");
 const helmet = require("helmet");
+const cors = require("cors");
 
 const indexRouter = require("./routes/index");
 const catalogRouter = require("./routes/catalog");
@@ -34,7 +35,7 @@ app.use(cookieParser());
 
 app.use(compression());
 app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(cors());
 
 app.use(express.static(path.join(__dirname, "public")));
 
