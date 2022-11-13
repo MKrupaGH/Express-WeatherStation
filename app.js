@@ -34,6 +34,7 @@ app.use(cookieParser());
 
 app.use(compression());
 app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 app.use(express.static(path.join(__dirname, "public")));
 
