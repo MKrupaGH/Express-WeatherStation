@@ -26,10 +26,7 @@ exec("pip install -r requirements.txt", (err, stdout, stderr) => {
 //DB connection
 const mongoose = require("mongoose")
 
-const db_url =
-  "mongodb+srv://marekkrupa:Erasmus2023@datadb.dudqxbg.mongodb.net/?retryWrites=true&w=majority&appName=DataDB"
-
-const mongoDB = process.env.MONGODB_URI || db_url
+const mongoDB = process.env.MONGODB_URI 
 
 mongoose.connect(mongoDB, { useNewUrlParser: true })
 const db = mongoose.connection
