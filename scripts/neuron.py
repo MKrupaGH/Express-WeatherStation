@@ -1,8 +1,9 @@
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-os.environ["CUDA_VISIBLE_DEVICES"] = ""
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
-#import tensorflow as tf
+import tensorflow as tf
+tf.config.set_visible_devices([], 'GPU') 
 import numpy as np
 import sys
 import json

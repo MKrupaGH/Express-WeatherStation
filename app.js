@@ -14,8 +14,6 @@ var app = express()
 
 const { exec } = require("child_process")
 
-process.env.CUDA_VISIBLE_DEVICES = ""
-
 // Step 1: Install TensorFlow and other dependencies from requirements.txt
 exec("pip install -r requirements.txt", (err, stdout, stderr) => {
   if (err) {
@@ -36,8 +34,8 @@ exec("pip install -r requirements.txt", (err, stdout, stderr) => {
 
 //DB connection
 const mongoose = require("mongoose")
-
-const mongoDB = process.env.MONGODB_URI
+const db_url = ""
+const mongoDB = process.env.MONGODB_URI || db_url
 
 mongoose.connect(mongoDB, { useNewUrlParser: true })
 const db = mongoose.connection
