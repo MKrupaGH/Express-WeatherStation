@@ -12,10 +12,24 @@ const catalogRouter = require("./routes/catalog")
 
 var app = express()
 
+const { exec } = require("child_process")
+
+// Install Python dependencies
+exec("pip install -r requirements.txt", (err, stdout, stderr) => {
+  if (err) {
+    console.error(`Error installing Python dependencies: ${stderr}`)
+    return
+  }
+  console.log(`Python dependencies installed successfully: ${stdout}`)
+})
+
 //DB connection
 const mongoose = require("mongoose")
 
-const mongoDB = process.env.MONGODB_URI
+const db_url =
+  "mongodb+srv://marekkrupa:Erasmus2023@datadb.dudqxbg.mongodb.net/?retryWrites=true&w=majority&appName=DataDB"
+
+const mongoDB = process.env.MONGODB_URI || db_url
 
 mongoose.connect(mongoDB, { useNewUrlParser: true })
 const db = mongoose.connection

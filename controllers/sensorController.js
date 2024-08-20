@@ -90,7 +90,7 @@ exports.sensor_create_post = async (req, res, next) => {
 
     //await sensor.save()
 
-    res.json("Saved")
+    res.status(200).json("Saved")
   } catch (err) {
     next(err)
   }
