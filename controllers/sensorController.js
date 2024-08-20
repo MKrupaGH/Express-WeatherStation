@@ -2,6 +2,8 @@ const Sensor = require("../models/sensor")
 const Prediction = require("../models/prediction")
 const { spawn } = require("child_process")
 
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args))
 exports.sensor_create_post = async (req, res, next) => {
   try {
     const weatherInfo = await fetch(
@@ -97,7 +99,6 @@ exports.sensor_create_post = async (req, res, next) => {
 const checkIfExist = async () => {
   try {
     const timestamp = new Date(new Date().getTime() - 60 * 1000)
-    console.log(timestamp)
 
     const startOfHour = new Date(timestamp)
     startOfHour.setMinutes(0, 0, 0)
@@ -330,8 +331,6 @@ exports.get_historic_data_and_prediction = async (req, res, next) => {
     )
 
     scaleResult(linearPredictions)
-
-    console.log(linearPredictions)
 
     return res.status(200).json({
       success: true,
