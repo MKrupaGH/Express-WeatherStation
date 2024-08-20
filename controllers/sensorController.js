@@ -49,7 +49,7 @@ exports.sensor_create_post = async (req, res, next) => {
       (isDataOnHour) => isDataOnHour
     )
 
-    if (checkIfDataExistInHour) {
+    if (!checkIfDataExistInHour) {
       const get12data = await fetch12data().then((res) => res.data)
 
       const weatherData = get12data.map((weatherInHour) => {

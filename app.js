@@ -26,7 +26,7 @@ exec("pip install -r requirements.txt", (err, stdout, stderr) => {
 //DB connection
 const mongoose = require("mongoose")
 
-const mongoDB = process.env.MONGODB_URI 
+const mongoDB = process.env.MONGODB_URI
 
 mongoose.connect(mongoDB, { useNewUrlParser: true })
 const db = mongoose.connection
