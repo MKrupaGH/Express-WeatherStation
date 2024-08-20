@@ -14,6 +14,8 @@ var app = express()
 
 const { exec } = require("child_process")
 
+process.env.CUDA_VISIBLE_DEVICES = ""
+
 // Step 1: Install TensorFlow and other dependencies from requirements.txt
 exec("pip install -r requirements.txt", (err, stdout, stderr) => {
   if (err) {
