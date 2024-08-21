@@ -12,30 +12,30 @@ const catalogRouter = require("./routes/catalog")
 
 var app = express()
 
-const { exec } = require("child_process")
+// const { exec } = require("child_process")
 
-// Step 1: Install TensorFlow and other dependencies from requirements.txt
-exec("pip install -r requirements.txt", (err, stdout, stderr) => {
-  if (err) {
-    console.error(`Error installing Python dependencies: ${stderr}`)
-    return
-  }
-  console.log(`Python dependencies installed successfully: ${stdout}`)
+// // Step 1: Install TensorFlow and other dependencies from requirements.txt
+// exec("pip install -r requirements.txt", (err, stdout, stderr) => {
+//   if (err) {
+//     console.error(`Error installing Python dependencies: ${stderr}`)
+//     return
+//   }
+//   console.log(`Python dependencies installed successfully: ${stdout}`)
 
-  // Step 2: Force install Keras 3.4.1 after TensorFlow
-  exec("pip install keras==3.4.1", (err, stdout, stderr) => {
-    if (err) {
-      console.error(`Error installing Keras 3.4.1: ${stderr}`)
-      return
-    }
-    console.log(`Keras 3.4.1 installed successfully: ${stdout}`)
-  })
-})
+//   // Step 2: Force install Keras 3.4.1 after TensorFlow
+//   exec("pip install keras==3.4.1", (err, stdout, stderr) => {
+//     if (err) {
+//       console.error(`Error installing Keras 3.4.1: ${stderr}`)
+//       return
+//     }
+//     console.log(`Keras 3.4.1 installed successfully: ${stdout}`)
+//   })
+// })
 
 //DB connection
 const mongoose = require("mongoose")
-const db_url = ""
-const mongoDB = process.env.MONGODB_URI || db_url
+
+const mongoDB = process.env.MONGODB_URI
 
 mongoose.connect(mongoDB, { useNewUrlParser: true })
 const db = mongoose.connection

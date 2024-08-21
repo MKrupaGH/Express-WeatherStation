@@ -96,6 +96,97 @@ exports.sensor_create_post = async (req, res, next) => {
   }
 }
 
+// const interval = async (req, res, next) => {
+//   try {
+//     const weatherInfo = await fetch(
+//       "https://api.open-meteo.com/v1/forecast?latitude=50.0614&longitude=19.9366&current=temperature_2m,relative_humidity_2m,cloud_cover,pressure_msl&timezone=Europe%2FBerlin"
+//     )
+
+//     const pollutionInfo = await fetch(
+//       "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=50.0614&longitude=19.9366&current=pm10,pm2_5,carbon_monoxide,ozone&timezone=Europe%2FBerlin"
+//     )
+
+//     const weatherResponse = await weatherInfo.json()
+//     const pollutionResponse = await pollutionInfo.json()
+
+//     const temp = Math.round(weatherResponse.current.temperature_2m)
+//     const humidity = Math.round(weatherResponse.current.relative_humidity_2m)
+//     const cloud = weatherResponse.current.cloud_cover
+//     const pres = Math.round(weatherResponse.current.pressure_msl)
+
+//     const pm10 = Math.round(pollutionResponse.current.pm10)
+//     const pm25 = Math.round(pollutionResponse.current.pm2_5)
+//     const pm1 =
+//       pm25 > 10
+//         ? Math.floor(pm25 - Math.random() * 5)
+//         : Math.floor(pm25 - Math.random() * 2)
+//     const co2 = pollutionResponse.current.carbon_monoxide
+//     const ozone = pollutionResponse.current.ozone
+
+//     const sensor = new Sensor({
+//       temp,
+//       hum: humidity,
+//       pres,
+//       cloud,
+//       pm1,
+//       pm25,
+//       pm10,
+//       o3: ozone,
+//       co2,
+//     })
+
+//     await sensor.save()
+
+//     const checkIfDataExistInHour = await checkIfExist().then(
+//       (isDataOnHour) => isDataOnHour
+//     )
+
+//     if (checkIfDataExistInHour) {
+//       const get12data = await fetch12data().then((res) => res.data)
+
+//       const weatherData = get12data.map((weatherInHour) => {
+//         return {
+//           time: weatherInHour.avgCreatedAt,
+//           temperature: weatherInHour.temp,
+//           humidity: weatherInHour.hum,
+//           pressure: weatherInHour.pres,
+//           cloud: weatherInHour.cloud,
+//           pm10: weatherInHour.pm10,
+//           pm25: weatherInHour.pm25,
+//           ozone: weatherInHour.o3,
+//         }
+//       })
+
+//       const weatherDataNeuronal = get12data.map((weatherInHour) => {
+//         return [
+//           weatherInHour.temp,
+//           weatherInHour.hum,
+//           weatherInHour.pres,
+//           weatherInHour.cloud,
+//           weatherInHour.pm10,
+//           weatherInHour.pm25,
+//           weatherInHour.o3,
+//         ]
+//       })
+
+//       const predictionsLinear = await runPythonScript(weatherData)
+//       const predictionsNeuron = await runNeuronScript(weatherDataNeuronal)
+
+//       const prediction = new Prediction({
+//         linear: predictionsLinear,
+//         neuron: predictionsNeuron,
+//       })
+
+//       await prediction.save()
+//     }
+//   } catch (err) {
+//     console.log(err)
+//   }
+// }
+
+// interval()
+// setInterval(interval, 900000)
+
 const checkIfExist = async () => {
   try {
     const timestamp = new Date(new Date().getTime() - 60 * 1000)
