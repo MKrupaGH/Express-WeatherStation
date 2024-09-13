@@ -34,8 +34,9 @@ var app = express()
 
 //DB connection
 const mongoose = require("mongoose")
-
-const mongoDB = process.env.MONGODB_URI
+const db_url =
+  "mongodb+srv://marekkrupa:Erasmus2023@datadb.dudqxbg.mongodb.net/?retryWrites=true&w=majority&appName=DataDB"
+const mongoDB = process.env.MONGODB_URI || db_url
 
 mongoose.connect(mongoDB, { useNewUrlParser: true })
 const db = mongoose.connection

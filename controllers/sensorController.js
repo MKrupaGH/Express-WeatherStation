@@ -1,7 +1,7 @@
 const Sensor = require("../models/sensor")
 const Prediction = require("../models/prediction")
 const { spawn } = require("child_process")
-
+const fs = require("fs")
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args))
 exports.sensor_create_post = async (req, res, next) => {
@@ -88,104 +88,125 @@ exports.sensor_create_post = async (req, res, next) => {
       await prediction.save()
     }
 
-    //await sensor.save()
-
     res.status(200).json("Saved")
   } catch (err) {
     next(err)
   }
 }
 
-// const interval = async (req, res, next) => {
-//   try {
-//     const weatherInfo = await fetch(
-//       "https://api.open-meteo.com/v1/forecast?latitude=50.0614&longitude=19.9366&current=temperature_2m,relative_humidity_2m,cloud_cover,pressure_msl&timezone=Europe%2FBerlin"
-//     )
+const interval = async (req, res, next) => {
+  try {
+    const weatherInfo = await fetch(
+      "https://api.open-meteo.com/v1/forecast?latitude=50.0614&longitude=19.9366&current=temperature_2m,relative_humidity_2m,cloud_cover,pressure_msl&timezone=Europe%2FBerlin"
+    )
 
-//     const pollutionInfo = await fetch(
-//       "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=50.0614&longitude=19.9366&current=pm10,pm2_5,carbon_monoxide,ozone&timezone=Europe%2FBerlin"
-//     )
+    const pollutionInfo = await fetch(
+      "https://air-quality-api.open-meteo.com/v1/air-quality?latitude=50.0614&longitude=19.9366&current=pm10,pm2_5,carbon_monoxide,ozone&timezone=Europe%2FBerlin"
+    )
 
-//     const weatherResponse = await weatherInfo.json()
-//     const pollutionResponse = await pollutionInfo.json()
+    const weatherResponse = await weatherInfo.json()
+    const pollutionResponse = await pollutionInfo.json()
 
-//     const temp = Math.round(weatherResponse.current.temperature_2m)
-//     const humidity = Math.round(weatherResponse.current.relative_humidity_2m)
-//     const cloud = weatherResponse.current.cloud_cover
-//     const pres = Math.round(weatherResponse.current.pressure_msl)
+    const temp = Math.round(weatherResponse.current.temperature_2m)
+    const humidity = Math.round(weatherResponse.current.relative_humidity_2m)
+    const cloud = weatherResponse.current.cloud_cover
+    const pres = Math.round(weatherResponse.current.pressure_msl)
 
-//     const pm10 = Math.round(pollutionResponse.current.pm10)
-//     const pm25 = Math.round(pollutionResponse.current.pm2_5)
-//     const pm1 =
-//       pm25 > 10
-//         ? Math.floor(pm25 - Math.random() * 5)
-//         : Math.floor(pm25 - Math.random() * 2)
-//     const co2 = pollutionResponse.current.carbon_monoxide
-//     const ozone = pollutionResponse.current.ozone
+    const pm10 = Math.round(pollutionResponse.current.pm10)
+    const pm25 = Math.round(pollutionResponse.current.pm2_5)
+    const pm1 =
+      pm25 > 10
+        ? Math.floor(pm25 - Math.random() * 5)
+        : Math.floor(pm25 - Math.random() * 2)
+    const co2 = pollutionResponse.current.carbon_monoxide
+    const ozone = pollutionResponse.current.ozone
 
-//     const sensor = new Sensor({
-//       temp,
-//       hum: humidity,
-//       pres,
-//       cloud,
-//       pm1,
-//       pm25,
-//       pm10,
-//       o3: ozone,
-//       co2,
-//     })
+    const sensor = new Sensor({
+      temp,
+      hum: humidity,
+      pres,
+      cloud,
+      pm1,
+      pm25,
+      pm10,
+      o3: ozone,
+      co2,
+    })
 
-//     await sensor.save()
+    await sensor.save()
 
-//     const checkIfDataExistInHour = await checkIfExist().then(
-//       (isDataOnHour) => isDataOnHour
-//     )
+    const checkIfDataExistInHour = await checkIfExist().then(
+      (isDataOnHour) => isDataOnHour
+    )
 
-//     if (checkIfDataExistInHour) {
-//       const get12data = await fetch12data().then((res) => res.data)
+    if (checkIfDataExistInHour) {
+      const get12data = await fetch12data().then((res) => res.data)
 
-//       const weatherData = get12data.map((weatherInHour) => {
-//         return {
-//           time: weatherInHour.avgCreatedAt,
-//           temperature: weatherInHour.temp,
-//           humidity: weatherInHour.hum,
-//           pressure: weatherInHour.pres,
-//           cloud: weatherInHour.cloud,
-//           pm10: weatherInHour.pm10,
-//           pm25: weatherInHour.pm25,
-//           ozone: weatherInHour.o3,
-//         }
-//       })
+      const weatherData = get12data.map((weatherInHour) => {
+        return {
+          time: weatherInHour.avgCreatedAt,
+          temperature: weatherInHour.temp,
+          humidity: weatherInHour.hum,
+          pressure: weatherInHour.pres,
+          cloud: weatherInHour.cloud,
+          pm10: weatherInHour.pm10,
+          pm25: weatherInHour.pm25,
+          ozone: weatherInHour.o3,
+        }
+      })
 
-//       const weatherDataNeuronal = get12data.map((weatherInHour) => {
-//         return [
-//           weatherInHour.temp,
-//           weatherInHour.hum,
-//           weatherInHour.pres,
-//           weatherInHour.cloud,
-//           weatherInHour.pm10,
-//           weatherInHour.pm25,
-//           weatherInHour.o3,
-//         ]
-//       })
+      const weatherDataNeuronal = get12data.map((weatherInHour) => {
+        return [
+          weatherInHour.temp,
+          weatherInHour.hum,
+          weatherInHour.pres,
+          weatherInHour.cloud,
+          weatherInHour.pm10,
+          weatherInHour.pm25,
+          weatherInHour.o3,
+        ]
+      })
 
-//       const predictionsLinear = await runPythonScript(weatherData)
-//       const predictionsNeuron = await runNeuronScript(weatherDataNeuronal)
+      const predictionsLinear = await runPythonScript(weatherData)
+      const predictionsNeuron = await runNeuronScript(weatherDataNeuronal)
 
-//       const prediction = new Prediction({
-//         linear: predictionsLinear,
-//         neuron: predictionsNeuron,
-//       })
+      const prediction = new Prediction({
+        linear: predictionsLinear,
+        neuron: predictionsNeuron,
+      })
 
-//       await prediction.save()
-//     }
-//   } catch (err) {
-//     console.log(err)
-//   }
-// }
+      await prediction.save()
+    }
+  } catch (err) {
+    console.log(err)
+  }
+}
 
-// interval()
-// setInterval(interval, 900000)
+async function fetchAndSaveAirQualityData() {
+  const url =
+    "https://airapi.airly.eu/v2/measurements/nearest?lat=50.06666&lng=19.887966&maxDistanceKM=1"
+  const headers = {
+    apikey: "BESueX3JJ667rjWMmx1Qq3C3oJ2AjACx",
+    Accept: "application/json",
+  }
+
+  try {
+    // Fetch data from the API
+    const response = await fetch(url, { headers })
+    const data = await response.json()
+
+    // Generate a unique filename with a number
+    const timestamp = new Date().toISOString().replace(/[-:.]/g, "")
+    const filename = `air_quality_data_${timestamp}.json`
+
+    // Save the data to a local JSON file
+    fs.writeFileSync(filename, JSON.stringify(data, null, 2), "utf-8")
+
+    console.log(`Data has been saved to ${filename}`)
+  } catch (error) {
+    console.error("Error fetching data:", error)
+  }
+}
 
 const checkIfExist = async () => {
   try {
@@ -248,6 +269,7 @@ const fetch12data = async (req, res) => {
           hum: { $avg: "$hum" },
           pres: { $avg: "$pres" },
           cloud: { $avg: "$cloud" },
+          pm1: { $avg: "$pm1" },
           pm25: { $avg: "$pm25" },
           pm10: { $avg: "$pm10" },
           o3: { $avg: "$o3" },
@@ -260,6 +282,8 @@ const fetch12data = async (req, res) => {
         },
       },
     ])
+
+    console.log(collection)
 
     return { data: collection }
   } catch (err) {
@@ -587,6 +611,11 @@ const sorted_data = async (req, res) => {
             date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
             hour: { $hour: "$createdAt" }, // Group by hour within the date
           },
+          temp: { $avg: "$temp" },
+          hum: { $avg: "$hum" },
+          pres: { $avg: "$pres" },
+          cloud: { $avg: "$cloud" },
+          pm1: { $avg: "$pm1" },
           pm25: { $avg: "$pm25" },
           pm10: { $avg: "$pm10" },
           o3: { $avg: "$o3" },
@@ -601,6 +630,11 @@ const sorted_data = async (req, res) => {
       {
         $project: {
           _id: "$_id.hour", // Use the hour as the _id
+          temp: 1,
+          pres: 1,
+          hum: 1,
+          cloud: 1,
+          pm1: 1,
           pm25: 1,
           pm10: 1,
           o3: 1,
@@ -608,8 +642,12 @@ const sorted_data = async (req, res) => {
       },
     ])
 
+    console.log(collection)
+
     return { data: collection }
   } catch (err) {
     console.log(err)
   }
 }
+
+sorted_data()
